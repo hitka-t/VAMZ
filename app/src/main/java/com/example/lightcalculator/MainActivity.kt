@@ -10,15 +10,31 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.compose.rememberNavController
-import com.example.lightcalculator.screens.HomeScreen
-import com.example.lightcalculator.screens.StartScreen
-import com.example.lightcalculator.screens.StartScreen // ak bude dalsia obrazovka
+import com.example.lightcalculator.data.Database
+import com.example.lightcalculator.ui.screen.HomeScreen
+import com.example.lightcalculator.ui.screen.NewCalculationScreen
+import com.example.lightcalculator.ui.screen.StartScreen
 import com.example.lightcalculator.ui.theme.LightCalculatorTheme
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import com.example.lightcalculator.data.Light
+import com.example.lightcalculator.data.Lights
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Pripravime databazu
+        val db = Database.getDatabase(applicationContext)
+        val dao = db.lightFixtureDao()
+
+        // Vlozime vzorove data IBA ak databaza je prazdna
+        lifecycleScope.launch {
+            if (dao.getAllBrands().isEmpty()) {
+                Lights.forEach { dao.insert(it) }
+            }
+        }
+
         // Nastavime Compose obsah
         setContent {
             // Pouzijeme vlastnu temu definovanu v /ui/theme
@@ -49,6 +65,9 @@ fun AppNavigation(navController: NavHostController) {
         // Ak mas dalsiu obrazovku, napr. Home
         composable("home") {
             HomeScreen(navController)
+        }
+        composable("new") {
+            NewCalculationScreen()
         }
     }
 }

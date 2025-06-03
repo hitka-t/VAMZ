@@ -1,4 +1,4 @@
-package com.example.lightcalculator.screens
+package com.example.lightcalculator.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

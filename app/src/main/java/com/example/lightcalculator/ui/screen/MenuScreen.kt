@@ -1,4 +1,4 @@
-package com.example.lightcalculator.screens
+package com.example.lightcalculator.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,7 +47,9 @@ fun HomeScreen(navController: NavController) {
         ) {
             // Tlacidlo NOVY
             Button(
-                onClick = { /* TODO: Navigacia na nova konfiguracia */ },
+                onClick = {
+                    navController.navigate("new")
+                          },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
                 shape = MaterialTheme.shapes.large,
                 modifier = Modifier.fillMaxWidth()
