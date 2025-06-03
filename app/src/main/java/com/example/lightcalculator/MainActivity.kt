@@ -3,45 +3,52 @@ package com.example.lightcalculator
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.rememberNavController
+import com.example.lightcalculator.screens.HomeScreen
+import com.example.lightcalculator.screens.StartScreen
+import com.example.lightcalculator.screens.StartScreen // ak bude dalsia obrazovka
 import com.example.lightcalculator.ui.theme.LightCalculatorTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        // Nastavime Compose obsah
         setContent {
+            // Pouzijeme vlastnu temu definovanu v /ui/theme
             LightCalculatorTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                // Povrch appky (pozadie)
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    // Vytvorime navController na spravu navigacie
+                    val navController = rememberNavController()
+                    // Zavolame navigacnu funkciu
+                    AppNavigation(navController)
                 }
             }
         }
     }
 }
 
+// Navigacia medzi obrazovkami
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    LightCalculatorTheme {
-        Greeting("Android")
+fun AppNavigation(navController: NavHostController) {
+    NavHost(
+        navController = navController,
+        startDestination = "start" // StartScreen je prva obrazovka
+    ) {
+        // definujem route pre StartScreen
+        composable("start") {
+            StartScreen(navController)
+        }
+        // Ak mas dalsiu obrazovku, napr. Home
+        composable("home") {
+            HomeScreen(navController)
+        }
     }
 }

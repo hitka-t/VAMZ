@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">LightCalculator</string>
+    <string name="info">Info</string>
+    <string name="START_info_title">O svetelnej kalkulačke</string>
+    <string name="START_info_title_des">tu pride text</string>
+    <string name="ok">OK</string>
+    <string name="new_button">NOVÝ</string>
+    <string name="load_preset_button">LOAD PRESET</string>
+    <string name="HOME_info_title">Hlavné menu</string>
+    <string name="HOME_info_title_des">Tu si môžete vybrať, či začnete nový výpočet, alebo načítate uložený preset.</string>
 </resources>
