@@ -1,126 +1,64 @@
 package com.example.lightcalculator.ui.screen
 
-import androidx.compose.foundation.clickable
+import android.app.Application
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.lightcalculator.viewmodel.LightViewModel
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.TextField
-import androidx.compose.material3.Text
+import com.example.lightcalculator.viewmodel.LightViewModelFactory
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewCalculationScreen(viewModel: LightViewModel = viewModel()) {
-    // Stav vyberov
-    var selectedBrand by remember { mutableStateOf("") }
-    var selectedModel by remember { mutableStateOf("") }
-    var selectedModeDes by remember { mutableStateOf("") }
+fun NewCalculationScreen() {
+    val context = LocalContext.current.applicationContext as Application
+    val viewModel: LightViewModel = viewModel(factory = LightViewModelFactory(context))
 
     val brands by viewModel.brands.collectAsState()
-    val models by viewModel.models.collectAsState()
-    val modes by viewModel.modes.collectAsState()
-    val selectedLight by viewModel.selectedLight.collectAsState()
+    var selectedBrand by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
+
+    // Load brands once
+    LaunchedEffect(Unit) {
+        viewModel.loadBrands()
+    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text("Novy vypocet", style = MaterialTheme.typography.titleLarge)
+        Text("Nový výpočet", style = MaterialTheme.typography.titleLarge)
 
-        // BRAND
-        DropdownMenuField(
-            label = "Brand",
-            options = brands,
-            selected = selectedBrand,
-            onSelect = {
-                selectedBrand = it
-                selectedModel = ""
-                selectedModeDes = ""
-                viewModel.loadModelsForBrand(it)
-            }
-        )
-
-        // MODEL
-        if (selectedBrand.isNotEmpty()) {
-            DropdownMenuField(
-                label = "Model",
-                options = models,
-                selected = selectedModel,
-                onSelect = {
-                    selectedModel = it
-                    selectedModeDes = ""
-                    viewModel.loadModesForModel(selectedBrand, it)
-                }
-            )
-        }
-
-        // MODE
-        if (selectedModel.isNotEmpty()) {
-            DropdownMenuField(
-                label = "DMX Mode",
-                options = modes,
-                selected = selectedModeDes,
-                onSelect = {
-                    selectedModeDes = it
-                    viewModel.loadLight(selectedBrand, selectedModel, it)
-                }
-            )
-        }
-
-        // ZOBRAZENIE DETAILOV
-        selectedLight?.let { light ->
-            Divider()
-            Text("Vybrane svietidlo:")
-            Text("Power: ${light.power} W")
-            Text("DMX Mode: ${light.DMXmode}")
-        }
-    }
-}
-@Composable
-fun DropdownMenuField(
-    label: String,
-    options: List<String>,
-    selected: String,
-    onSelect: (String) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = label)
-        Box {
-            OutlinedTextField(
-                value = selected,
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { expanded = !expanded }
+        ) {
+            TextField(
+                value = selectedBrand,
                 onValueChange = {},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { expanded = true },
-                label = { Text(label) },
                 readOnly = true,
+                label = { Text("Značka") },
                 trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = "Dropdown icon"
-                    )
-                }
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                },
+                modifier = Modifier.menuAnchor().fillMaxWidth()
             )
-
-            DropdownMenu(
+            ExposedDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                options.forEach { option ->
+                brands.forEach { brand ->
                     DropdownMenuItem(
-                        text = { Text(option) },
+                        text = { Text(brand) },
                         onClick = {
-                            onSelect(option)
+                            selectedBrand = brand
                             expanded = false
                         }
                     )

@@ -1,5 +1,6 @@
 package com.example.lightcalculator.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,19 +17,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.lightcalculator.R
+import com.example.lightcalculator.data.populateSampleLightsIfEmpty
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
 
 @Composable
 fun StartScreen(navController: NavController) {
-    // Premenna, ktora urcuje, ci sa ma zobrazit info dialog
     var showInfoDialog by remember { mutableStateOf(false) }
+
+
+    LaunchedEffect(Unit) {
+        populateSampleLightsIfEmpty()
+    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.LightGray) // Nastavi svetlosive pozadie obrazovky
+            .background(Color.LightGray)
             .padding(WindowInsets.statusBars.asPaddingValues())
     ) {
-        // Info ikona v pravom hornom rohu
         Icon(
             imageVector = Icons.Default.Info,
             contentDescription = stringResource(R.string.info),
@@ -36,26 +44,22 @@ fun StartScreen(navController: NavController) {
                 .align(Alignment.TopEnd)
                 .padding(25.dp)
                 .clickable {
-                    // Po kliknuti zobrazime info dialog
                     showInfoDialog = true
                 },
             tint = Color.Black
         )
 
-        // Gombik (obrazok) umiestneny v strede
         Image(
-            painter = painterResource(id = R.drawable.play_button1), // Obrazok tlacidla z drawable
+            painter = painterResource(id = R.drawable.play_button1),
             contentDescription = "Play",
             modifier = Modifier
                 .align(Alignment.Center)
                 .size(240.dp)
                 .clickable {
-                    // Po kliknuti prepneme na dalsiu obrazovku (napr. home)
                     navController.navigate("home")
                 }
         )
 
-        // Ak je showInfoDialog true, zobrazime AlertDialog
         if (showInfoDialog) {
             AlertDialog(
                 onDismissRequest = { showInfoDialog = false },

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "940686309787",
+    "project_id": "lightcalculator-44c01",
+    "storage_bucket": "lightcalculator-44c01.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:940686309787:android:1a34f4f89ebb4ff28cc93e",
+        "android_client_info": {
+          "package_name": "com.example.lightcalculator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0GRUmaF8BUi-2-EMfvS_lwnQa5dmKsio"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
