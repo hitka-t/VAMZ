@@ -63,7 +63,9 @@ fun HomeScreen(navController: NavController) {
 
             // Tlacidlo LOAD PRESET
             Button(
-                onClick = { /* TODO: Navigacia na nacitanie */ },
+                onClick = {
+                    navController.navigate("load")
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
                 shape = MaterialTheme.shapes.large,
                 modifier = Modifier.fillMaxWidth()

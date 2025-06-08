@@ -24,6 +24,7 @@
     <string name="button_calculate">Vypočítať</string>
     <string name="summary_title">Pridané svetlá:</string>
     <string name="summary_format">%1$sx %2$s %3$s</string>
+    <string name="info_new_calculation">Tu zadáš svetlá pre výpočet. Vyber značku, typ a DMX mód, zadaj počet a pridaj ich.</string>
 
     <!-- -->
     <string name="error_fill_all_fields">Prosím, vyplňte všetky polia.</string>
@@ -41,8 +42,23 @@
     <string name="result_phase_light_entry">- %1$d× %2$s</string>
     <string name="result_universe_section_title">DMX universy:</string>
     <string name="result_universe_light_entry">- %1$s: %2$s</string>
+    <string name="info_result">Tu vidíš výpočty pre fázy a univerzá. Môžeš ich uložiť ako preset.</string>
 
     <!-- -->
     <string name="button_back">Späť</string>
     <string name="button_done">Hotovo</string>
+
+
+    <string name="save_preset_title">Uložiť preset</string>
+    <string name="save_preset_label">Názov akcie</string>
+    <string name="preset_saved">Preset bol uložený</string>
+    <string name="button_cancel">Zrušiť</string>
+
+    <!-- LoadPresetScreen -->
+    <string name="load_preset_title">Načítať preset</string>
+    <string name="load_preset_empty">Žiadne presety neboli nájdené.</string>
+
+
+
+
 </resources>

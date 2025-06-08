@@ -8,9 +8,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.lightcalculator.ui.screen.*
 import com.example.lightcalculator.ui.theme.LightCalculatorTheme
 import com.example.lightcalculator.viewmodel.CalculationViewModel
@@ -32,7 +34,6 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
-    // Vytvoríme shared ViewModel, ktorý sa zdieľa medzi obrazovkami
     val sharedViewModel: CalculationViewModel = viewModel()
 
     NavHost(
@@ -48,8 +49,18 @@ fun AppNavigation(navController: NavHostController) {
         composable("new") {
             NewCalculationScreen(navController, sharedViewModel)
         }
-        composable("result") {
-            CalculationResultScreen(sharedViewModel)
+        composable(
+            "result?fromPreset={fromPreset}",
+            arguments = listOf(navArgument("fromPreset") {
+                type = NavType.BoolType
+                defaultValue = false
+            })
+        ) { backStackEntry ->
+            val isFromPreset = backStackEntry.arguments?.getBoolean("fromPreset") ?: false
+            CalculationResultScreen(sharedViewModel, isFromPreset)
+        }
+        composable("load") {
+            LoadPresetScreen(navController, sharedViewModel)
         }
     }
 }

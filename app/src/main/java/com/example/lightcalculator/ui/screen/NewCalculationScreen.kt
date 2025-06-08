@@ -1,17 +1,21 @@
 package com.example.lightcalculator.ui.screen
 
 import android.app.Application
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -47,18 +51,38 @@ fun NewCalculationScreen(
     var typeExpanded by rememberSaveable { mutableStateOf(false) }
     var dmxModeExpanded by rememberSaveable { mutableStateOf(false) }
 
+    var showInfoDialog by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         viewModel.loadBrands()
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.LightGray)
+    ) {
+        Icon(
+            imageVector = Icons.Default.Info,
+            contentDescription = stringResource(R.string.info),
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp)
+                .clickable { showInfoDialog = true },
+            tint = Color.Black
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text(text = stringResource(R.string.title_new_calculation), style = MaterialTheme.typography.titleLarge)
+            Text(
+                text = stringResource(R.string.title_new_calculation),
+                style = MaterialTheme.typography.titleLarge,
+                color = Color.Black
+            )
 
             // Značka
             ExposedDropdownMenuBox(
@@ -167,14 +191,40 @@ fun NewCalculationScreen(
                     }
                 },
                 enabled = selectedDmxMode.isNotEmpty(),
-                label = { Text(stringResource(R.string.label_quantity)) },
+                label = {
+                    Text(
+                        stringResource(R.string.label_quantity),
+                        color = Color.Black
+                    )
+                },
+                textStyle = LocalTextStyle.current.copy(color = Color.Black),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.Black,
+                    unfocusedBorderColor = Color.Black,
+                    cursorColor = Color.Black,
+                    focusedLabelColor = Color.Black,
+                    unfocusedLabelColor = Color.Black,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black
+                )
             )
         }
-
-        // Scrollovateľný zoznam pridaných svetiel
+        if (showInfoDialog) {
+            AlertDialog(
+                onDismissRequest = { showInfoDialog = false },
+                title = { Text(stringResource(R.string.info)) },
+                text = { Text(stringResource(R.string.info_new_calculation)) },
+                confirmButton = {
+                    TextButton(onClick = { showInfoDialog = false }) {
+                        Text(stringResource(R.string.ok))
+                    }
+                }
+            )
+        }
+        // Zoznam pridaných svetiel
         if (addedItems.isNotEmpty()) {
             val scrollState = rememberScrollState()
             Column(
@@ -187,19 +237,26 @@ fun NewCalculationScreen(
                 Text(
                     text = stringResource(R.string.summary_title),
                     style = MaterialTheme.typography.titleMedium,
+                    color = Color.Black,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
                 addedItems.forEach { item ->
                     Text(
-                        text = stringResource(R.string.summary_format, item.quantity.toString(), item.brand, item.model),
+                        text = stringResource(
+                            R.string.summary_format,
+                            item.quantity.toString(),
+                            item.brand,
+                            item.model
+                        ),
                         style = MaterialTheme.typography.bodyLarge,
+                        color = Color.Black,
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
                 }
             }
         }
 
-        // Tlačidlá naspodku
+        // Tlačidlá
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -228,9 +285,13 @@ fun NewCalculationScreen(
                         viewModel.clearDmxModes()
                     }
                 },
-                modifier = Modifier.fillMaxWidth(),
                 enabled = selectedBrand.isNotEmpty() && selectedType.isNotEmpty()
-                        && selectedDmxMode.isNotEmpty() && quantity.isNotEmpty()
+                        && selectedDmxMode.isNotEmpty() && quantity.isNotEmpty(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.DarkGray,
+                    contentColor = Color.White
+                ),
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(stringResource(R.string.button_add))
             }
@@ -241,9 +302,10 @@ fun NewCalculationScreen(
                     navController.navigate("result")
                 },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = addedItems.isNotEmpty()
+                enabled = addedItems.isNotEmpty(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
             ) {
-                Text(stringResource(R.string.button_calculate))
+                Text(stringResource(R.string.button_calculate), color = Color.White)
             }
         }
     }

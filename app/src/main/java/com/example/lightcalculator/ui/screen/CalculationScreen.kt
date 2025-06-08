@@ -1,5 +1,7 @@
 package com.example.lightcalculator.ui.screen
 
+import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -7,10 +9,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.lightcalculator.R
 import com.example.lightcalculator.data.AddedLight
+import com.example.lightcalculator.data.preset.Preset
+import com.example.lightcalculator.data.preset.PresetStorage
 import com.example.lightcalculator.viewmodel.CalculationViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -32,13 +38,17 @@ private data class UniverseLight(
 )
 
 @Composable
-fun CalculationResultScreen(sharedViewModel: CalculationViewModel) {
+fun CalculationResultScreen(sharedViewModel: CalculationViewModel, isFromPreset: Boolean) {
+    val context = LocalContext.current
     val lights by sharedViewModel.items.collectAsState()
 
     var totalPower by remember { mutableStateOf<Int?>(null) }
     var universeCount by remember { mutableStateOf<Int?>(null) }
     var phaseData by remember { mutableStateOf<List<PhaseInfo>>(emptyList()) }
     var universeData by remember { mutableStateOf<List<UniverseInfo>>(emptyList()) }
+
+    var showSaveDialog by remember { mutableStateOf(false) }
+    var presetName by remember { mutableStateOf("") }
 
     LaunchedEffect(lights) {
         val lightUnits = mutableListOf<Triple<String, Int, Int>>()
@@ -99,7 +109,9 @@ fun CalculationResultScreen(sharedViewModel: CalculationViewModel) {
 
     val scrollState = rememberScrollState()
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.LightGray)) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -107,38 +119,64 @@ fun CalculationResultScreen(sharedViewModel: CalculationViewModel) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text(text = stringResource(R.string.result_title), style = MaterialTheme.typography.titleLarge)
+            Text(text = stringResource(R.string.result_title), style = MaterialTheme.typography.titleLarge, color = Color.Black)
 
             if (totalPower == null || universeCount == null) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
             } else {
                 Text(
                     text = stringResource(R.string.result_total_power, totalPower.toString()),
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.Black
                 )
                 Text(
                     text = stringResource(R.string.result_universe_count, universeCount!!),
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.Black
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Text(text = stringResource(R.string.result_phase_count, phaseData.size), style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = stringResource(R.string.result_phase_count, phaseData.size),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.Black
+                )
                 phaseData.forEachIndexed { index, phase ->
-                    Text(text = stringResource(R.string.result_phase_label, index + 1, phase.totalPower), style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        text = stringResource(R.string.result_phase_label, index + 1, phase.totalPower),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.Black
+                    )
                     phase.lights.forEach { (name, count) ->
-                        Text(text = stringResource(R.string.result_phase_light_entry, count, name), style = MaterialTheme.typography.bodyMedium)
+                        Text(
+                            text = stringResource(R.string.result_phase_light_entry, count, name),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.Black
+                        )
                     }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(text = stringResource(R.string.result_universe_section_title), style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = stringResource(R.string.result_universe_section_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.Black
+                )
                 universeData.forEachIndexed { index, universe ->
-                    Text(text = stringResource(R.string.result_universe_label, index + 1), style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        text = stringResource(R.string.result_universe_label, index + 1),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.Black
+                    )
                     universe.contents.forEach { light ->
                         val addresses = light.startAddresses.joinToString(", ")
-                        Text(text = stringResource(R.string.result_universe_light_entry, light.name, addresses), style = MaterialTheme.typography.bodyMedium)
+                        Text(
+                            text = stringResource(R.string.result_universe_light_entry, light.name, addresses),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.Black
+                        )
                     }
                 }
 
@@ -146,14 +184,54 @@ fun CalculationResultScreen(sharedViewModel: CalculationViewModel) {
             }
         }
 
-        Button(
-            onClick = { /* TODO: uloženie */ },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(16.dp)
-                .fillMaxWidth()
-        ) {
-            Text(text = stringResource(R.string.button_save))
+        if (!isFromPreset) {
+            Button(
+                onClick = { showSaveDialog = true },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.DarkGray,
+                    contentColor = Color.White
+                ),
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(16.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(text = stringResource(R.string.button_save))
+            }
+        }
+
+        if (showSaveDialog) {
+            AlertDialog(
+                onDismissRequest = { showSaveDialog = false },
+                title = { Text(stringResource(R.string.save_preset_title)) },
+                text = {
+                    OutlinedTextField(
+                        value = presetName,
+                        onValueChange = { presetName = it },
+                        label = { Text(stringResource(R.string.save_preset_label)) },
+                        singleLine = true
+                    )
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            if (presetName.isNotBlank()) {
+                                PresetStorage.savePreset(context, Preset(presetName, lights))
+                                Toast.makeText(context, context.getString(R.string.preset_saved), Toast.LENGTH_SHORT).show()
+                                showSaveDialog = false
+                                presetName = ""
+                            }
+                        }
+                    ) {
+                        Text(stringResource(R.string.button_save))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showSaveDialog = false }) {
+                        Text(stringResource(R.string.button_cancel))
+                    }
+                }
+            )
         }
     }
 }
