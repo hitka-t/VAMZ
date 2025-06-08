@@ -38,10 +38,10 @@ fun AppNavigation(navController: NavHostController) {
 
     NavHost(
         navController = navController,
-        startDestination = "start"
+        startDestination = "start" //prva obrazovka
     ) {
         composable("start") {
-            StartScreen(navController)
+            StartScreen(navController) // uvodna obrazovka
         }
         composable("home") {
             HomeScreen(navController)

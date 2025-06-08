@@ -6,7 +6,7 @@
 
     <!-- StartScreen -->
     <string name="START_info_title">O svetelnej kalkulačke</string>
-    <string name="START_info_title_des">tu pride text</string>
+    <string name="START_info_title_des">Táto aplikácia sľuži na pomocné výpočty pre osvetlovača na akciach, ponúka množstvo rôznych typov svetiel, s ktoými vie úživatel pracovať a vyberať si ich počet a rôzne DMX módy podľa potreby.</string>
 
     <!-- HomeScreen -->
     <string name="new_button">NOVÝ</string>
