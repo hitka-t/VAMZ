@@ -1,4 +1,5 @@
 <resources>
+    <!-- MenuScreen -->
     <string name="app_name">LightCalculator</string>
     <string name="info">Info</string>
     <string name="START_info_title">O svetelnej kalkulačke</string>
@@ -8,4 +9,20 @@
     <string name="load_preset_button">LOAD PRESET</string>
     <string name="HOME_info_title">Hlavné menu</string>
     <string name="HOME_info_title_des">Tu si môžete vybrať, či začnete nový výpočet, alebo načítate uložený preset.</string>
+    <!-- NewCalculationScreen -->
+    <string name="title_new_calculation">Nový výpočet</string>
+
+    <string name="label_brand">Značka</string>
+
+    <string name="label_light_type">Model svetla</string>
+
+    <string name="label_dmx_mode">DMX mód</string>
+
+    <string name="label_quantity">Počet svetiel</string>
+
+    <string name="button_add">Pridať</string>
+    <string name="button_calculate">Vypočítať</string>
+    <string name="summary_format">%1$sx %2$s %3$s</string>
+    <string name="summary_title">Pridané svetlá:</string>
+
 </resources>
