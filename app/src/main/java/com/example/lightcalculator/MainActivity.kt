@@ -6,14 +6,14 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.lightcalculator.ui.screen.HomeScreen
-import com.example.lightcalculator.ui.screen.NewCalculationScreen
-import com.example.lightcalculator.ui.screen.StartScreen
+import com.example.lightcalculator.ui.screen.*
 import com.example.lightcalculator.ui.theme.LightCalculatorTheme
+import com.example.lightcalculator.viewmodel.CalculationViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +32,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
+    // Vytvoríme shared ViewModel, ktorý sa zdieľa medzi obrazovkami
+    val sharedViewModel: CalculationViewModel = viewModel()
+
     NavHost(
         navController = navController,
         startDestination = "start"
@@ -43,7 +46,10 @@ fun AppNavigation(navController: NavHostController) {
             HomeScreen(navController)
         }
         composable("new") {
-            NewCalculationScreen()
+            NewCalculationScreen(navController, sharedViewModel)
+        }
+        composable("result") {
+            CalculationResultScreen(sharedViewModel)
         }
     }
 }

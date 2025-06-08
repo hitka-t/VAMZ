@@ -1,28 +1,48 @@
 <resources>
-    <!-- MenuScreen -->
+    <!-- Info -->
     <string name="app_name">LightCalculator</string>
+    <string name="ok">OK</string>
     <string name="info">Info</string>
+
+    <!-- StartScreen -->
     <string name="START_info_title">O svetelnej kalkulačke</string>
     <string name="START_info_title_des">tu pride text</string>
-    <string name="ok">OK</string>
+
+    <!-- HomeScreen -->
     <string name="new_button">NOVÝ</string>
     <string name="load_preset_button">LOAD PRESET</string>
     <string name="HOME_info_title">Hlavné menu</string>
     <string name="HOME_info_title_des">Tu si môžete vybrať, či začnete nový výpočet, alebo načítate uložený preset.</string>
+
     <!-- NewCalculationScreen -->
     <string name="title_new_calculation">Nový výpočet</string>
-
     <string name="label_brand">Značka</string>
-
     <string name="label_light_type">Model svetla</string>
-
     <string name="label_dmx_mode">DMX mód</string>
-
     <string name="label_quantity">Počet svetiel</string>
-
     <string name="button_add">Pridať</string>
     <string name="button_calculate">Vypočítať</string>
-    <string name="summary_format">%1$sx %2$s %3$s</string>
     <string name="summary_title">Pridané svetlá:</string>
+    <string name="summary_format">%1$sx %2$s %3$s</string>
 
+    <!-- -->
+    <string name="error_fill_all_fields">Prosím, vyplňte všetky polia.</string>
+    <string name="error_quantity_invalid">Počet musí byť celé číslo.</string>
+
+    <!-- CalculationResultScreen -->
+    <string name="result_title">Výsledok výpočtu</string>
+    <string name="result_total_power">Celkový príkon: %1$s W</string>
+    <string name="result_total_universes">Počet DMX universov: %1$s</string>
+    <string name="result_universe_count">Potrebné DMX universy: %1$d</string>
+    <string name="result_universe_label">Universe %1$d:</string>
+    <string name="button_save">Uložiť</string>
+    <string name="result_phase_count">Počet fáz: %1$d</string>
+    <string name="result_phase_label">Fáza %1$d: %2$d W</string>
+    <string name="result_phase_light_entry">- %1$d× %2$s</string>
+    <string name="result_universe_section_title">DMX universy:</string>
+    <string name="result_universe_light_entry">- %1$s: %2$s</string>
+
+    <!-- -->
+    <string name="button_back">Späť</string>
+    <string name="button_done">Hotovo</string>
 </resources>
